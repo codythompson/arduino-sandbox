@@ -6,7 +6,7 @@ const int ledPin = 7;
 const int neoPixelPin = 8;
 const int buttonPin = 2;
 
-Adafruit_NeoPixel neoPixel = Adafruit_NeoPixel(1, neoPixelPin, NEO_RGB + NEO_KHZ800);
+Adafruit_NeoPixel neoPixel = Adafruit_NeoPixel(1, neoPixelPin, NEO_GRB + NEO_KHZ800);
 ezButton button(buttonPin);
 
 const int colorCount = 3;
@@ -48,7 +48,7 @@ void setup() {
   // initialize the LED pin as an output:
   pinMode(ledPin, OUTPUT);
   // initialize the pushbutton pin as an input:
-  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(buttonPin, INPUT);
 
   neoPixel.begin();
   neoPixel.setBrightness(1);
