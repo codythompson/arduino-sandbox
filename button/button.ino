@@ -3,7 +3,8 @@
 #include <ezButton.h>
 
 const int ledPin = 7;
-const int neoPixelPin = 8;
+// const int neoPixelPin = 8;
+const int neoPixelPin = 10;
 const int buttonPin = 2;
 
 Adafruit_NeoPixel neoPixel = Adafruit_NeoPixel(1, neoPixelPin, NEO_GRB + NEO_KHZ800);
@@ -44,14 +45,13 @@ void setNeoPixelState(int stateIndex) {
 
 void setup() {  
   neoPixelState = 0;
+  button.setDebounceTime(200);
   
   // initialize the LED pin as an output:
   pinMode(ledPin, OUTPUT);
-  // initialize the pushbutton pin as an input:
-  pinMode(buttonPin, INPUT);
 
   neoPixel.begin();
-  neoPixel.setBrightness(1);
+  neoPixel.setBrightness(10);
   neoPixel.show(); // Initialize all pixels to 'off'
 
   //Initiate Serial communication.
