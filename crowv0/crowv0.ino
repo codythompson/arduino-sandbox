@@ -21,10 +21,15 @@ void setup() {
 
   // put your setup code here, to run once:
   headServo.attach(HEAD_SERVO_PIN);
+  headServo.write(1500);
+  delay(30);
 
   p1.update(millis());
-  p1.begin(1500, 2000, 2000, 1000);
-  p1.push(2000, 700, 1000, 1000);
+  p1.begin(p1.IN_OUT_EXP, 1500, 2000, 2000, 1000);
+  p1.push(p1.IN_OUT_EXP, 2000, 700, 1700);
+  p1.push(p1.IN_OUT_EXP, 700, 1500, 1000);
+  p1.push(p1.IN_OUT_EXP, 1500, 700, 1000);
+  p1.push(p1.IN_OUT_EXP, 700, 1500, 1000);
 }
 
 void loop() {

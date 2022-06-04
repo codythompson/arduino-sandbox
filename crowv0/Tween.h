@@ -6,6 +6,7 @@
 #endif
 
 typedef struct {
+  int interpFunc;
   int start;
   int end;
   int duration;
@@ -16,6 +17,7 @@ typedef struct {
 class Tween {
   private:
     // path parameters
+    int interpFunc;
     int start;
     int end;
     int delta;
@@ -39,12 +41,17 @@ class Tween {
     bool paused = false;
 
   public:
-    void begin(int start, int end, int duration, int delay=0, int delayAfter=0);
+    static const int LINEAR = 0;
+    static const int IN_OUT_EXP = 1;
+
+    void begin(int interpFunc, int start, int end, int duration, int delay=0, int delayAfter=0);
+    int interpolateLinear(double t);
+    int interpolateInOutExp(double t);
     int interpolate(double t);
     void pause();
     void resume();
     void update(int time);
-    void push(int start, int end, int duration, int delay=0, int delayAfter=0);
+    void push(int interpFunc, int start, int end, int duration, int delay=0, int delayAfter=0);
 
     bool isActive();
     bool hasCompleted();
