@@ -1,0 +1,5 @@
+{
+  "cpu": {
+    "fqbn": "adafruit:samd:adafruit_qtpy_m0"
+  }
+}
