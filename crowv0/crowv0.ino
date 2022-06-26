@@ -3,33 +3,62 @@
 #include "Ticker.h"
 #include "Tween.h"
 
-#define TICK_INTERVAL_MILLIS 33 // ~ 30fps
+#define CROW_BODY_MAX 850
+// #define CROW_BODY_MAX 1000 // actual max
+#define CROW_BODY_MIN 700
+#define CROW_BODY_HALF CROW_BODY_MAX-CROW_BODY_MIN
+#define CROW_BODY_MID CROW_BODY_MIN + CROW_BODY_HALF
+
+#define TICK_INTERVAL_MILLIS 18 // ~ 60fps
+// #define TICK_INTERVAL_MILLIS 34 // ~ 30fps
 // #define TICK_INTERVAL_MILLIS 1000 // ~ 1fps
-#define HEAD_SERVO_PIN 10
+#define BODY_SERVO_PIN 10
+#define NECK_SERVO_PIN 1
 
 Ticker ticker(TICK_INTERVAL_MILLIS);
-Servo headServo;
+Servo bodyServo;
+Servo neckServo;
 Tween p1 = Tween();
+Tween p2 = Tween();
 
 int lastVal;
 
 void setup() {
+  // Serial.begin(9600);
   // while(!Serial) {};
-  Serial.begin(9600);
   // delay(3000);
-  // Serial.println("SETUP");
 
   // put your setup code here, to run once:
-  headServo.attach(HEAD_SERVO_PIN);
-  headServo.write(1500);
+  bodyServo.writeMicroseconds(CROW_BODY_MIN);
+  bodyServo.attach(BODY_SERVO_PIN);
+  neckServo.writeMicroseconds(1500);
+  neckServo.attach(NECK_SERVO_PIN);
   delay(30);
 
   p1.update(millis());
-  p1.begin(p1.IN_OUT_EXP, 1500, 2000, 2000, 1000);
-  p1.push(p1.IN_OUT_EXP, 2000, 700, 1700);
-  p1.push(p1.IN_OUT_EXP, 700, 1500, 1000);
-  p1.push(p1.IN_OUT_EXP, 1500, 700, 1000);
-  p1.push(p1.IN_OUT_EXP, 700, 1500, 1000);
+  p2.update(millis());
+  // p1.begin(p1.LINEAR, 1500, 700, 5000, 1000);
+  p1.begin(p1.IN_OUT_QUAD, CROW_BODY_MIN, CROW_BODY_MID, 3000);
+  p1.push(p1.IN_OUT_QUAD, CROW_BODY_MID, CROW_BODY_MIN, 1000);
+
+  p1.push(p1.LINEAR, CROW_BODY_MIN, CROW_BODY_MIN+50, 250);
+  p1.push(p1.LINEAR, CROW_BODY_MIN+50, CROW_BODY_MIN, 250);
+  p1.push(p1.LINEAR, CROW_BODY_MIN, CROW_BODY_MIN+50, 250);
+  p1.push(p1.LINEAR, CROW_BODY_MIN+50, CROW_BODY_MIN, 250);
+  p1.push(p1.LINEAR, CROW_BODY_MIN, CROW_BODY_MIN+50, 250);
+  p1.push(p1.LINEAR, CROW_BODY_MIN+50, CROW_BODY_MIN, 250);
+  p1.push(p1.LINEAR, CROW_BODY_MIN, CROW_BODY_MIN+50, 250);
+  p1.push(p1.LINEAR, CROW_BODY_MIN+50, CROW_BODY_MIN, 250);
+  p1.push(p1.LINEAR, CROW_BODY_MIN, CROW_BODY_MIN+50, 250);
+
+  p1.push(p1.IN_OUT_QUAD, CROW_BODY_MIN+50, CROW_BODY_MIN, 3000);
+
+  p2.begin(p1.IN_OUT_QUAD, 1500, 1400, 250);
+  p2.push(p1.IN_OUT_QUAD, 1600, 1400, 500);
+  p2.push(p1.IN_OUT_QUAD, 1400, 1600, 500);
+  p2.push(p1.IN_OUT_QUAD, 1600, 1400, 500);
+  p2.push(p1.IN_OUT_QUAD, 1400, 1600, 500);
+  p2.push(p1.IN_OUT_QUAD, 1500, 1500, 250);
 }
 
 void loop() {
@@ -37,8 +66,13 @@ void loop() {
   int time = millis();
   int preTick = p1.value();
   p1.update(time);
+  p2.update(time);
   if (p1.value() != lastVal) {
     lastVal = p1.value();
-    headServo.writeMicroseconds(p1.value());
+    bodyServo.writeMicroseconds(p1.value());
+    Serial.println(lastVal);
   }
+
+  //
+  neckServo.writeMicroseconds(p2.value());
 }

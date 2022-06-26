@@ -2,7 +2,7 @@
 #include <Arduino.h>
 
 #ifndef TWEEN_MAX_CHAIN
-  #define TWEEN_MAX_CHAIN 4
+  #define TWEEN_MAX_CHAIN 16
 #endif
 
 typedef struct {
@@ -43,10 +43,12 @@ class Tween {
   public:
     static const int LINEAR = 0;
     static const int IN_OUT_EXP = 1;
+    static const int IN_OUT_QUAD = 2;
 
     void begin(int interpFunc, int start, int end, int duration, int delay=0, int delayAfter=0);
     int interpolateLinear(double t);
     int interpolateInOutExp(double t);
+    int interpolateInOutQuad(double t);
     int interpolate(double t);
     void pause();
     void resume();

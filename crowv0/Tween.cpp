@@ -15,6 +15,10 @@ int Tween::interpolateInOutExp(double t) {
     : (2 - pow(2, -20 * t + 10)) / 2;
   return this->interpolateLinear(newT);
 }
+int Tween::interpolateInOutQuad(double t) {
+  double newT = t < 0.5 ? 2 * t * t : 1 - pow(-2 * t + 2, 2) / 2;
+  return this->interpolateLinear(newT);
+}
 int Tween::interpolateLinear(double t) {
   return this->start + (round(this->delta * t));
 }
@@ -24,6 +28,9 @@ int Tween::interpolate(double t) {
   }
   else if (this->interpFunc == this->IN_OUT_EXP) {
     return this->interpolateInOutExp(t);
+  }
+  else if (this->interpFunc == this->IN_OUT_QUAD) {
+    return this->interpolateInOutQuad(t);
   }
   else {
     Serial.println(F("Unknown interp func"));
