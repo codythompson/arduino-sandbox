@@ -1,4 +1,6 @@
 #include <Servo.h>
+#include <Adafruit_NeoPixel.h>
+#include <ezButton.h>
 
 #include "Ticker.h"
 #include "Tween.h"
@@ -23,10 +25,15 @@ Tween p2 = Tween();
 
 int lastVal;
 
+// BUTTON STUFF
+#define BREAD_BUTTON_PIN 2
+#define POT_PIN 3
+Adafruit_NeoPixel onboard(1, PIN_NEOPIXEL);
+ezButton bbutt(BREAD_BUTTON_PIN);
+
 void setup() {
-  // Serial.begin(9600);
+  Serial.begin(9600);
   // while(!Serial) {};
-  // delay(3000);
 
   // put your setup code here, to run once:
   bodyServo.writeMicroseconds(CROW_BODY_MIN+50);
@@ -60,6 +67,13 @@ void setup() {
   // p2.push(p1.IN_OUT_QUAD, 1600, 1400, 500);
   // p2.push(p1.IN_OUT_QUAD, 1400, 1600, 500);
   // p2.push(p1.IN_OUT_QUAD, 1500, 1500, 250);
+
+// BUTTON STUFF
+  bbutt.setDebounceTime(100);
+  onboard.begin();
+  onboard.setBrightness(10);
+  onboard.setPixelColor(0, onboard.Color(255, 0, 255));
+  onboard.show();
 }
 
 void loop() {
@@ -68,11 +82,38 @@ void loop() {
   int preTick = p1.value();
   p1.update(time);
   p2.update(time);
-  if (p1.value() != lastVal) {
-    lastVal = p1.value();
-    bodyServo.writeMicroseconds(p1.value());
-    Serial.println(lastVal);
+
+  // BUTTON STUFF
+  bbutt.loop();
+  if (bbutt.getState() == LOW) { // low == pushed
+    onboard.clear();
+    onboard.setPixelColor(0, onboard.Color(255, 0, 255));
+    onboard.show();
+    neckServo.writeMicroseconds(1000);
   }
+  else {
+    onboard.clear();
+    onboard.setPixelColor(0, onboard.Color(0, 255, 255));
+    onboard.show();
+    neckServo.writeMicroseconds(1500);
+  }
+  double potVal = (double)analogRead(POT_PIN)/1000.0;
+  int servoVal = 800 + (int)(potVal * 1400.0);
+  if (servoVal < 800) {
+    Serial.println("HIT BOTTOM");
+    servoVal = 800;
+  }
+  if (servoVal > 2200) {
+    Serial.println("HIT TOP");
+    servoVal = 2200;
+  }
+  neckServo.writeMicroseconds(servoVal);
+  // END BUTTON STUFF
+
+  // if (p1.value() != lastVal) {
+  //   lastVal = p1.value();
+  //   bodyServo.writeMicroseconds(p1.value());
+  // }
 
   //
   // neckServo.writeMicroseconds(p2.value());
