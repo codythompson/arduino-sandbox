@@ -4,6 +4,7 @@
 
 #include "Ticker.h"
 #include "Tween.h"
+#include "Pose.h"
 
 #define CROW_BODY_MAX 850
 // #define CROW_BODY_MAX 1000 // actual max
@@ -24,6 +25,9 @@ Tween p1 = Tween();
 Tween p2 = Tween();
 
 int lastVal;
+
+// FINE TUNE MODE STUFF
+
 
 // BUTTON STUFF
 #define BREAD_BUTTON_PIN 2
